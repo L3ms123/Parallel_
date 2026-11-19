@@ -27,31 +27,70 @@
 #include <sys/time.h>
 
 //-----------FREE INPUT------------
-void freeInput(int np, char** input) {
-    for (int i = 0; i < np; i++)
-        free(input[i]);
-    free(input);
+void freeInput(int np, char **input) {
+  for (int i = 0; i < np; i++)
+    free(input[i]);
+  free(input);
 }
 
 //-----------PRINTRECOGNIZED------------
 void printRecognized(int p, layer Output) {
-    int imax = 0;
+  int imax = 0;
 
-    for (int i = 1; i < num_out_layer; i++)
-        if (Output.actv[i] > Output.actv[imax])
-            imax = i;
+  for (int i = 1; i < num_out_layer; i++)
+    if (Output.actv[i] > Output.actv[imax])
+      imax = i;
 
-    if (imax == Validation[p])
-        total++;
+  if (imax == Validation[p])
+    total++;
 
-    if (debug == 2) {
-        printf("Patró %d sembla %c i és %d", p, '0' + imax,
-               Validation[p]);
-        for (int k = 0; k < num_out_layer; k++)
-            printf("   %f", Output.actv[k]);
-        printf("\n");
-    }
+  if (debug == 2) {
+    printf("Patró %d sembla %c i és %d", p, '0' + imax, Validation[p]);
+    for (int k = 0; k < num_out_layer; k++)
+      printf("   %f", Output.actv[k]);
+    printf("\n");
+  }
 }
+
+
+//-----------GPU DATA MANAGEMENT ------------
+/**
+ * @brief Copies the whole network to the GPU once ("enter data").
+ *        Called from main() before training. Arrays are copied individually
+ *        (actv, bias, z, ... of every layer; out_weights and dw only for the
+ *        layers that have a next layer). The kernels of training.c then use
+ *        them with present(...), so nothing is copied again inside the loops.
+ */
+static void gpu_copy_network(void) {
+  for (int i = 0; i < num_layers; i++) {
+    const int n = num_neurons[i];
+#pragma acc enter data copyin(lay[i].actv[0 : n], lay[i].bias[0 : n],          \
+                                  lay[i].z[0 : n], lay[i].dactv[0 : n],        \
+                                  lay[i].dbias[0 : n], lay[i].dz[0 : n])
+    if (i < num_layers - 1) {
+      const int m = num_neurons[i + 1] * n;
+#pragma acc enter data copyin(lay[i].out_weights[0 : m], lay[i].dw[0 : m])
+    }
+  }
+}
+
+/**
+ * @brief Brings the trained weights and biases back to the host and frees the
+ *        GPU copies ("exit data"). Called from main() after test_nn.
+ */
+static void gpu_release_network(void) {
+  for (int i = 0; i < num_layers; i++) {
+    const int n = num_neurons[i];
+#pragma acc exit data copyout(lay[i].bias[0 : n]) delete(                      \
+        lay[i].actv[0 : n], lay[i].z[0 : n], lay[i].dactv[0 : n],              \
+            lay[i].dbias[0 : n], lay[i].dz[0 : n])
+    if (i < num_layers - 1) {
+      const int m = num_neurons[i + 1] * n;
+#pragma acc exit data copyout(lay[i].out_weights[0 : m]) delete(lay[i].dw[0 : m])
+    }
+  }
+}
+
 
 /**
  * @brief Entrena la xarxa neuronal en base al conjunt d'entrenament
@@ -70,109 +109,135 @@ void printRecognized(int p, layer Output) {
  *
  */
 void train_neural_net() {
-    printf("\nTraining...\n");
+  printf("\nTraining...\n");
 
-    if ((input = loadPatternSet(num_training_patterns, dataset_training_path,
-                                1)) == NULL) {
-        printf("Loading Patterns: Error!!\n");
-        exit(-1);
+  if ((input = loadPatternSet(num_training_patterns, dataset_training_path,
+                              1)) == NULL) {
+    printf("Loading Patterns: Error!!\n");
+    exit(-1);
+  }
+
+  // Note: "enter data copyin" is equivalent to do a "malloc"+"copy" in the GPU.
+  // Patterns and desired outputs go to the GPU once, before the epochs.
+  // (The network itself was copied in main() with gpu_copy_network().)
+  for (int i = 0; i < num_training_patterns; i++) {
+#pragma acc enter data copyin(input[i][0 : num_neurons[0]])
+#pragma acc enter data copyin(desired_outputs[i][0 : num_neurons[num_layers - 1]])
+  }
+
+  int ranpat[num_training_patterns];
+  for (int p = 0; p < num_training_patterns; p++)
+    ranpat[p] = p;
+
+  // Gradient Descent
+  for (int it = 0; it < num_epochs; it++) {
+    loss_reset(); // loss accumulator = 0 (host and GPU)
+    // Train patterns randomly
+    for (int p = 0; p < num_training_patterns; p++) {
+      int x = rando();
+      int np = (x * x) % num_training_patterns;
+      int op = ranpat[p];
+      ranpat[p] = ranpat[np];
+      ranpat[np] = op;
+    }
+    // Every function below runs on the GPU (queue 1); the host only queues them.
+    for (int nb = 0; nb < num_training_patterns / batch_size; nb++) {
+      init_deltas();
+      for (int i = nb * batch_size; i < (nb + 1) * batch_size; i++) {
+        int p = ranpat[i];
+        feed_input(p);
+        forward_prop();
+        compute_loss(p); // accumulated on the GPU
+        back_prop(p);
+      }
+      update_weights();
     }
 
-    int ranpat[num_training_patterns];
+    // The only host<->GPU transfer per epoch: wait for the GPU queue and read
+    // the accumulated loss.
+    float loss = loss_get();
 
-    for (int p = 0; p < num_training_patterns; p++)
-        ranpat[p] = p;
-
-    // Gradient Descent
-    for (int it = 0; it < num_epochs; it++) {
-        float loss = 0;
-        // Train patterns randomly
-        for (int p = 0; p < num_training_patterns; p++) {
-            int x = rando();
-            int np = (x * x) % num_training_patterns;
-            int op = ranpat[p];
-            ranpat[p] = ranpat[np];
-            ranpat[np] = op;
-        }
-
-        for (int nb = 0; nb < num_training_patterns/batch_size; nb++) {
-            init_deltas();
-            for (int i = nb*batch_size; i < (nb+1)*batch_size; i++) {
-                int p = ranpat[i];
-
-                feed_input(p);
-                forward_prop();
-                loss += compute_loss(p);
-                back_prop(p);
-            }
-            update_weights();
-        }
-
-        printf("Epoch %d Loss: %f\n", it, loss/num_training_patterns);
-        if (debug == 1) getchar();
-    }
-    freeInput(num_training_patterns, input);
+    printf("Epoch %d Loss: %f\n", it, loss / num_training_patterns);
+    if (debug == 1)
+      getchar();
+  }
+  // Free the GPU copies of the patterns before freeing them on the host.
+  for (int i = 0; i < num_training_patterns; i++) {
+#pragma acc exit data delete(input[i][0 : num_neurons[0]])
+#pragma acc exit data delete(desired_outputs[i][0 : num_neurons[num_layers - 1]])
+  }
+  freeInput(num_training_patterns, input);
 }
 
 //-----------TEST THE TRAINED NETWORK------------
 void test_nn() {
-    char** rSet;
+  char **rSet;
 
-    printf("\nTesting...\n");
+  printf("\nTesting...\n");
 
-    if ((rSet = loadPatternSet(num_test_patterns, dataset_test_path, 0)) ==
-        NULL) {
-        printf("Error!!\n");
-        exit(-1);
-    }
+  if ((rSet = loadPatternSet(num_test_patterns, dataset_test_path, 0)) ==
+      NULL) {
+    printf("Error!!\n");
+    exit(-1);
+  }
 
-    for (int i = 0; i < num_test_patterns; i++) {
-        for (int j = 0; j < num_neurons[0]; j++)
-            lay[0].actv[j] = rSet[i][j];
+  for (int i = 0; i < num_test_patterns; i++) {
+    for (int j = 0; j < num_neurons[0]; j++)
+      lay[0].actv[j] = rSet[i][j];
+    // Send the pattern to the GPU, run forward_prop there and bring back only
+    // the 10 output activations (everything on queue 1, so it stays ordered).
+#pragma acc update device(lay[0].actv[0 : num_neurons[0]]) async(1)
+    forward_prop();
+#pragma acc update host(lay[num_layers - 1].actv[0 : num_neurons[num_layers - 1]]) async(1)
+#pragma acc wait(1)
+    printRecognized(i, lay[num_layers - 1]);
+  }
 
-        forward_prop();
-        printRecognized(i, lay[num_layers - 1]);
-    }
-
-    printf("\nTotal encerts = %d (/%d) \n", total, num_test_patterns);
-    freeInput(num_test_patterns, rSet);
+  printf("\nTotal encerts = %d (/%d) \n", total, num_test_patterns);
+  freeInput(num_test_patterns, rSet);
 }
 
 //-----------MAIN-----------//
-int main(int argc, char** argv) {
-    if (debug == 1)
-        printf("argc = %d \n", argc);
-    if (argc <= 1)
-        readConfiguration("configuration/configfile.txt");
-    else
-        readConfiguration(argv[1]);
+int main(int argc, char **argv) {
+  if (debug == 1)
+    printf("argc = %d \n", argc);
+  if (argc <= 1)
+    readConfiguration("configuration/configfile.txt");
+  else
+    readConfiguration(argv[1]);
 
-    if (debug == 1)
-        printf("FINISH CONFIG \n");
+  if (debug == 1)
+    printf("FINISH CONFIG \n");
 
-    // Initialize the neural network module
-    if (init() != SUCCESS_INIT) {
-        printf("Error in Initialization...\n");
-        exit(0);
-    }
+  // Initialize the neural network module
+  if (init() != SUCCESS_INIT) {
+    printf("Error in Initialization...\n");
+    exit(0);
+  }
 
-    // Start measuring time
-    struct timeval begin;
-    gettimeofday(&begin, 0);
+  // Start measuring time
+  struct timeval begin;
+  gettimeofday(&begin, 0);
 
-    // Train
-    train_neural_net();
+  // Copy the network to the GPU (once).
+  gpu_copy_network();
 
-    // Test
-    test_nn();
+  // Train
+  train_neural_net();
 
-    // Stop measuring time and calculate the elapsed time
-    double elapsed = elapsedT(begin);
+  // Test
+  test_nn();
 
-    if (dinit() != SUCCESS_DINIT)
-        printf("Error in Dinitialization...\n");
+  // Free the GPU copies (weights and biases come back to the host).
+  gpu_release_network();
 
-    printf("\n\nGoodbye! (%f sec)\n\n", elapsed);
+  // Stop measuring time and calculate the elapsed time
+  double elapsed = elapsedT(begin);
 
-    return 0;
+  if (dinit() != SUCCESS_DINIT)
+    printf("Error in Dinitialization...\n");
+
+  printf("\n\nGoodbye! (%f sec)\n\n", elapsed);
+
+  return 0;
 }
