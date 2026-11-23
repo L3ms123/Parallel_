@@ -1,0 +1,17 @@
+main.c:
+"main.c", line 72: warning: variable "m" was declared but never referenced [declared_but_not_referenced]
+        const int m = num_neurons[i + 1] * n;
+                  ^
+
+Remark: individual warnings can be suppressed with "--diag_suppress <warning-name>"
+
+"main.c", line 90: warning: variable "m" was declared but never referenced [declared_but_not_referenced]
+        const int m = num_neurons[i + 1] * n;
+                  ^
+
+common/common.c:
+configuration/config.c:
+layer/layer.c:
+randomizer/randomizer.c:
+initialize/initialize.c:
+training/training.c:

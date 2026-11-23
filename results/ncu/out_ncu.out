@@ -1,0 +1,72 @@
+aolin-gpu-1.uab.cat
+/opt/nvidia/hpc_sdk/Linux_x86_64/26.9/compilers/bin/ncu
+num_epochs=1
+==PROF== Connected to process 667050 (/home/alumnos/ppia/ppia-23/nn_openacc/exec_gpu)
+==PROF== Profiling "forward_prop_156": 0%....50%....100% - 45 passes
+==PROF== Profiling "forward_prop_156": 0%....50%....100% - 45 passes
+==PROF== Profiling "forward_prop_156": 0%....50%....100% - 45 passes
+==PROF== Profiling "forward_prop_156": 0%....50%....100% - 45 passes
+
+Training...
+Epoch 0 Loss: 0.363917
+
+Testing...
+
+Total encerts = 150 (/946) 
+
+
+Goodbye! (9.364788 sec)
+
+==PROF== Disconnected from process 667050
+==PROF== Report: /home/alumnos/ppia/ppia-23/nn_openacc/ncu_forward.ncu-rep
+==PROF== Connected to process 667279 (/home/alumnos/ppia/ppia-23/nn_openacc/exec_gpu)
+==PROF== Profiling "back_prop_341": 0%....50%....100% - 45 passes
+==PROF== Profiling "back_prop_341": 0%....50%....100% - 44 passes
+==PROF== Profiling "back_prop_341": 0%....50%....100% - 45 passes
+
+Training...
+Epoch 0 Loss: 0.363917
+
+Testing...
+
+Total encerts = 150 (/946) 
+
+
+Goodbye! (7.828472 sec)
+
+==PROF== Disconnected from process 667279
+==PROF== Report: /home/alumnos/ppia/ppia-23/nn_openacc/ncu_b341.ncu-rep
+==PROF== Connected to process 667450 (/home/alumnos/ppia/ppia-23/nn_openacc/exec_gpu)
+==PROF== Profiling "back_prop_351": 0%....50%....100% - 45 passes
+==PROF== Profiling "back_prop_351": 0%....50%....100% - 45 passes
+
+Training...
+Epoch 0 Loss: 0.363917
+
+Testing...
+
+Total encerts = 150 (/946) 
+
+
+Goodbye! (6.991893 sec)
+
+==PROF== Disconnected from process 667450
+==PROF== Report: /home/alumnos/ppia/ppia-23/nn_openacc/ncu_b351.ncu-rep
+==PROF== Connected to process 667574 (/home/alumnos/ppia/ppia-23/nn_openacc/exec_gpu)
+==PROF== Profiling "update_weights_65": 0%....50%....100% - 45 passes
+==PROF== Profiling "update_weights_65": 0%....50%....100% - 45 passes
+==PROF== Profiling "update_weights_65": 0%....50%....100% - 45 passes
+==PROF== Profiling "update_weights_65": 0%....50%....100% - 45 passes
+
+Training...
+Epoch 0 Loss: 0.363917
+
+Testing...
+
+Total encerts = 150 (/946) 
+
+
+Goodbye! (9.665719 sec)
+
+==PROF== Disconnected from process 667574
+==PROF== Report: /home/alumnos/ppia/ppia-23/nn_openacc/ncu_update.ncu-rep

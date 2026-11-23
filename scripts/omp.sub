@@ -1,0 +1,34 @@
+#!/bin/bash
+# Runs the sequential version and the OpenMP version with 1, 2, 4, 6 and 12 threads.
+# Usage (on Wilma):  sbatch omp.sub
+# Output in:         slurm-NUMBER.out
+#
+# To use the other queue, change nodo.q to new-nodo.q in the --partition line.
+
+#SBATCH -N 1                    # 1 computer (node)
+#SBATCH --exclusive             # the node is only for us -> reliable times
+#SBATCH --partition=nodo.q      # queue where the job runs
+
+# 1) Load the compiler (check the exact name with: module avail)
+module load gcc/13.2.1
+
+# 2) Build both versions with the Makefile
+make clean
+make seq
+make omp
+
+# 3) Sequential version (the reference to compute the speedup)
+echo "=============================="
+echo "SEQUENTIAL"
+echo "=============================="
+./exec_seq
+
+# 4) OpenMP version with different numbers of threads
+for threads in 1 2 4 6 12
+do
+    echo "=============================="
+    echo "OPENMP with $threads threads"
+    echo "=============================="
+    export OMP_NUM_THREADS=$threads   # tells OpenMP how many threads to use
+    ./exec_omp
+done

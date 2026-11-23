@@ -1,0 +1,147 @@
+aolin-gpu-1.uab.cat
+name
+NVIDIA GeForce RTX 3080
+== cfg_63/cfg_500.txt exec_gpu run1
+Total encerts = 929 (/946) 
+Goodbye! (1.742950 sec)
+== cfg_63/cfg_500.txt exec_gpu run2
+Total encerts = 929 (/946) 
+Goodbye! (1.665704 sec)
+== cfg_63/cfg_500.txt exec_gpu run3
+Total encerts = 929 (/946) 
+Goodbye! (1.657585 sec)
+== cfg_63/cfg_500.txt exec_cpu run1
+Total encerts = 822 (/946) 
+Goodbye! (16.834776 sec)
+== cfg_63/cfg_500.txt exec_cpu run2
+Total encerts = 822 (/946) 
+Goodbye! (16.832099 sec)
+== cfg_63/cfg_500.txt exec_cpu run3
+Total encerts = 822 (/946) 
+Goodbye! (16.842144 sec)
+== cfg_63/cfg_1000.txt exec_gpu run1
+Total encerts = 757 (/946) 
+Goodbye! (2.047344 sec)
+== cfg_63/cfg_1000.txt exec_gpu run2
+Total encerts = 757 (/946) 
+Goodbye! (1.930045 sec)
+== cfg_63/cfg_1000.txt exec_gpu run3
+Total encerts = 757 (/946) 
+Goodbye! (1.959483 sec)
+== cfg_63/cfg_1000.txt exec_cpu run1
+Total encerts = 757 (/946) 
+Goodbye! (41.430381 sec)
+== cfg_63/cfg_1000.txt exec_cpu run2
+Total encerts = 757 (/946) 
+Goodbye! (41.438039 sec)
+== cfg_63/cfg_1000.txt exec_cpu run3
+Total encerts = 757 (/946) 
+Goodbye! (41.385850 sec)
+== cfg_63/cfg_2000.txt exec_gpu run1
+Total encerts = 927 (/946) 
+Goodbye! (3.566059 sec)
+== cfg_63/cfg_2000.txt exec_gpu run2
+Total encerts = 927 (/946) 
+Goodbye! (3.494371 sec)
+== cfg_63/cfg_2000.txt exec_gpu run3
+Total encerts = 927 (/946) 
+Goodbye! (3.506934 sec)
+== cfg_63/cfg_2000.txt exec_cpu run1
+Total encerts = 927 (/946) 
+Goodbye! (117.771331 sec)
+== cfg_63/cfg_2000.txt exec_cpu run2
+Total encerts = 927 (/946) 
+Goodbye! (117.850163 sec)
+== cfg_63/cfg_2000.txt exec_cpu run3
+Total encerts = 927 (/946) 
+Goodbye! (117.727479 sec)
+== cfg_63/cfg_b10.txt exec_gpu run1
+Total encerts = 918 (/946) 
+Goodbye! (1.847006 sec)
+== cfg_63/cfg_b10.txt exec_gpu run2
+Total encerts = 918 (/946) 
+Goodbye! (1.770012 sec)
+== cfg_63/cfg_b10.txt exec_gpu run3
+Total encerts = 918 (/946) 
+Goodbye! (1.752804 sec)
+== cfg_63/cfg_b10.txt exec_cpu run1
+Total encerts = 917 (/946) 
+Goodbye! (17.759483 sec)
+== cfg_63/cfg_b10.txt exec_cpu run2
+Total encerts = 917 (/946) 
+Goodbye! (17.775925 sec)
+== cfg_63/cfg_b10.txt exec_cpu run3
+Total encerts = 917 (/946) 
+Goodbye! (17.750220 sec)
+== cfg_63/cfg_b100.txt exec_gpu run1
+Total encerts = 87 (/946) 
+Goodbye! (1.743067 sec)
+== cfg_63/cfg_b100.txt exec_gpu run2
+Total encerts = 87 (/946) 
+Goodbye! (1.667351 sec)
+== cfg_63/cfg_b100.txt exec_gpu run3
+Total encerts = 87 (/946) 
+Goodbye! (1.654451 sec)
+== cfg_63/cfg_b100.txt exec_cpu run1
+Total encerts = 87 (/946) 
+Goodbye! (16.726219 sec)
+== cfg_63/cfg_b100.txt exec_cpu run2
+Total encerts = 87 (/946) 
+Goodbye! (16.730750 sec)
+== cfg_63/cfg_b100.txt exec_cpu run3
+Total encerts = 87 (/946) 
+Goodbye! (16.725078 sec)
+== cfg_63/cfg_b200.txt exec_gpu run1
+Total encerts = 87 (/946) 
+Goodbye! (1.661859 sec)
+== cfg_63/cfg_b200.txt exec_gpu run2
+Total encerts = 87 (/946) 
+Goodbye! (1.580816 sec)
+== cfg_63/cfg_b200.txt exec_gpu run3
+Total encerts = 87 (/946) 
+Goodbye! (1.597973 sec)
+== cfg_63/cfg_b200.txt exec_cpu run1
+Total encerts = 87 (/946) 
+Goodbye! (15.844012 sec)
+== cfg_63/cfg_b200.txt exec_cpu run2
+Total encerts = 87 (/946) 
+Goodbye! (15.843719 sec)
+== cfg_63/cfg_b200.txt exec_cpu run3
+Total encerts = 87 (/946) 
+Goodbye! (15.836461 sec)
+== cfg_63/cfg_e5.txt exec_gpu run1
+Total encerts = 912 (/946) 
+Goodbye! (1.039256 sec)
+== cfg_63/cfg_e5.txt exec_gpu run2
+Total encerts = 912 (/946) 
+Goodbye! (0.956347 sec)
+== cfg_63/cfg_e5.txt exec_gpu run3
+Total encerts = 912 (/946) 
+Goodbye! (0.944002 sec)
+== cfg_63/cfg_e5.txt exec_cpu run1
+Total encerts = 714 (/946) 
+Goodbye! (8.774002 sec)
+== cfg_63/cfg_e5.txt exec_cpu run2
+Total encerts = 714 (/946) 
+Goodbye! (8.769243 sec)
+== cfg_63/cfg_e5.txt exec_cpu run3
+Total encerts = 714 (/946) 
+Goodbye! (8.772136 sec)
+== cfg_63/cfg_e20.txt exec_gpu run1
+Total encerts = 927 (/946) 
+Goodbye! (3.168832 sec)
+== cfg_63/cfg_e20.txt exec_gpu run2
+Total encerts = 927 (/946) 
+Goodbye! (3.085368 sec)
+== cfg_63/cfg_e20.txt exec_gpu run3
+Total encerts = 927 (/946) 
+Goodbye! (3.084581 sec)
+== cfg_63/cfg_e20.txt exec_cpu run1
+Total encerts = 819 (/946) 
+Goodbye! (32.974157 sec)
+== cfg_63/cfg_e20.txt exec_cpu run2
+Total encerts = 819 (/946) 
+Goodbye! (32.970383 sec)
+== cfg_63/cfg_e20.txt exec_cpu run3
+Total encerts = 819 (/946) 
+Goodbye! (32.953695 sec)

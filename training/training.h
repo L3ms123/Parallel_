@@ -32,5 +32,7 @@ void forward_prop();
 float compute_loss(int i);
 void back_prop(int p);
 void update_weights(void);
+void loss_reset(void);
+float loss_get(void);
 
 #endif

@@ -1,0 +1,23 @@
+#!/bin/bash
+# Measures how much time the SEQUENTIAL program spends in each function (gprof).
+# Usage (on Wilma):  sbatch prof.sub
+# Output in:         slurm-NUMBER.out
+
+#SBATCH -N 1
+#SBATCH --exclusive
+#SBATCH --partition=nodo.q
+
+module load gcc/13.2.1
+
+# 1) Build the gprof version
+make prof
+
+# 2) Run it normally: when it finishes it creates gmon.out with the measurements
+./exec_prof
+
+# 3) Show the summary: % of time spent in each function
+#    -b = no long explanations,  -p = only the main (flat profile) table
+echo "=============================="
+echo "PROFILE (gprof)"
+echo "=============================="
+gprof -b -p exec_prof gmon.out

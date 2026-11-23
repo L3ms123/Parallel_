@@ -1,0 +1,37 @@
+aolin-gpu-1.uab.cat
+== cfg_63/cfg_b100_a.txt exec_gpu run1
+Total encerts = 557 (/946) 
+Goodbye! (1.774836 sec)
+== cfg_63/cfg_b100_a.txt exec_gpu run2
+Total encerts = 557 (/946) 
+Goodbye! (1.664993 sec)
+== cfg_63/cfg_b100_a.txt exec_gpu run3
+Total encerts = 557 (/946) 
+Goodbye! (1.649440 sec)
+== cfg_63/cfg_b100_a.txt exec_cpu run1
+Total encerts = 744 (/946) 
+Goodbye! (16.744204 sec)
+== cfg_63/cfg_b100_a.txt exec_cpu run2
+Total encerts = 744 (/946) 
+Goodbye! (16.758298 sec)
+== cfg_63/cfg_b100_a.txt exec_cpu run3
+Total encerts = 744 (/946) 
+Goodbye! (16.743820 sec)
+== cfg_63/cfg_b200_a.txt exec_gpu run1
+Total encerts = 537 (/946) 
+Goodbye! (1.685379 sec)
+== cfg_63/cfg_b200_a.txt exec_gpu run2
+Total encerts = 537 (/946) 
+Goodbye! (1.581589 sec)
+== cfg_63/cfg_b200_a.txt exec_gpu run3
+Total encerts = 537 (/946) 
+Goodbye! (1.591020 sec)
+== cfg_63/cfg_b200_a.txt exec_cpu run1
+Total encerts = 91 (/946) 
+Goodbye! (15.865357 sec)
+== cfg_63/cfg_b200_a.txt exec_cpu run2
+Total encerts = 91 (/946) 
+Goodbye! (15.882907 sec)
+== cfg_63/cfg_b200_a.txt exec_cpu run3
+Total encerts = 91 (/946) 
+Goodbye! (15.855898 sec)
